@@ -2,7 +2,7 @@ list = [1, 2, 3, 4 ,5]
 
 print(list)
 
-print("Hello World!")
+print("Hello World! \nshot in the dark but you're too late")
 
 def odd_numbers(list):
     return [num for num in list if num % 2 !=0]
