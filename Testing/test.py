@@ -1,67 +1,50 @@
-"""for i in range(10):
-    for j in range(10):
-        print("*", end="  ")
-    print()
+class Cat:
+    def __init__(self, name, color, weight):
+        self.name = name
+        self.color = color
+        self.weight = weight
 
-for i in range(10):
-    print("*", end=" ")
-print()
+    def meow(self):
+        print(f"{self.name}: Meow")
 
-for i in range(5):
-    print("*", end=" ")
-print()
 
-for i in range(20):
-    print("*", end=" ")
-print()
+my_Cat = Cat(name="Franklin", color="orange", weight=12)
 
-for i in range(5):
-    for j in range(10):
-        print("*", end=" ")
-    print()
+print(f"{my_Cat.name}, {my_Cat.color}, {my_Cat.weight}")
 
-for i in range(5):
-    for j in range(20):
-        print("*", end=" ")
-    print()
+my_Cat.meow()
 
-for i in range(10):
-    for j in range(10):
-        print(j, end=" ")
-    print()
 
-for i in range(10):
-    for j in range(i+1):
-        print(j, end=" ")
-    print()
+class monster:
+    def __init__(self, name, health):
+        self.name = name
+        self.health = health
 
-for i in range(10):
-    for j in range(10-i):
-        print(j, end=" ")
-    print()
-"""
-for i in range(10):
-    for j in range(i):
-        print(" ", end=" ")
-    for j in range(10-i):
-        print(j, end=" ")
-    print()
-"""
-for i in range(1, 12):
-    for j in range(1, 12):
-        product = i*j
-        if product < 10:
-            print(" ", end="")
-        if product < 100:
-            print(" ", end="")
-        print(product, end=" ")
-    print()
+    def decrease_health(self, amount):
+        self.health -= amount
+        if self.health <= 0:
+            print(f"{self.name} is dead!")
 
-for i in range(1, 10):
-    for j in range(9-i, 0, -1):
-        print(" ", end=" ")
-    for j in range(i):
-        print(j+1, end=" ")
-    for j in range(j, 0, -1):
-        print(j, end=" ")
-    print()"""
+
+my_monster = monster(name="Ulamog", health=13)
+
+my_monster.decrease_health(13)
+print(f"{my_monster.name} has {my_monster.health} health...")
+
+
+class star:
+    def __init__(self):
+        print("a star is born")
+
+
+class Monster_2:
+    def __init__(self, name, health):
+        self.name = name
+        self.health = health
+
+
+star1 = star()
+
+new_monster = Monster_2("Ghalta", 12)
+
+print(f"monsters name is: {new_monster.name} and his health is: {new_monster.health}")
