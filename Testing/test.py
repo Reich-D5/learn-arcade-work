@@ -23,3 +23,4 @@ if __name__ == "__main__":
     countdown_duration = 60  # Set the countdown duration in seconds
     window = CountdownTimer(800, 600, "Countdown Timer Example", countdown_duration)
     arcade.run()
+#crank
