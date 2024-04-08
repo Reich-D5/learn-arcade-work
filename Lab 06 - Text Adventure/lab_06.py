@@ -78,6 +78,9 @@ def main():
     rooms[2].north_room = rooms[6]
     rooms[2].west_room = rooms[3]
 
+    #guest room
+    rooms[4].south_room = rooms[7]
+
 
     current_room = rooms[0]
     enter_room(current_room)
