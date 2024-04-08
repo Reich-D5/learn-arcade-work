@@ -1,50 +1,26 @@
-class Cat:
-    def __init__(self, name, color, weight):
-        self.name = name
-        self.color = color
-        self.weight = weight
+import arcade
+import time
 
-    def meow(self):
-        print(f"{self.name}: Meow")
+class CountdownTimer(arcade.Window):
+    def __init__(self, width, height, title, countdown_duration):
+        super().__init__(width, height, title)
+        self.countdown_duration = countdown_duration
+        self.timer_text = f"Time left: {self.countdown_duration:.1f}"
+        self.start_time = time.time()
 
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_text(self.timer_text, 10, self.height - 30, arcade.color.WHITE, 20)
 
-my_Cat = Cat(name="Franklin", color="orange", weight=12)
+    def update(self, delta_time):
+        elapsed_time = time.time() - self.start_time
+        time_left = max(0, self.countdown_duration - elapsed_time)
+        self.timer_text = f"Time left: {time_left:.1f}"
+        if time_left <= 0:
+            self.timer_text = "Time's up!"
 
-print(f"{my_Cat.name}, {my_Cat.color}, {my_Cat.weight}")
-
-my_Cat.meow()
-
-
-class monster:
-    def __init__(self, name, health):
-        self.name = name
-        self.health = health
-
-    def decrease_health(self, amount):
-        self.health -= amount
-        if self.health <= 0:
-            print(f"{self.name} is dead!")
-
-
-my_monster = monster(name="Ulamog", health=13)
-
-my_monster.decrease_health(13)
-print(f"{my_monster.name} has {my_monster.health} health...")
-
-
-class star:
-    def __init__(self):
-        print("a star is born")
-
-
-class Monster_2:
-    def __init__(self, name, health):
-        self.name = name
-        self.health = health
-
-
-star1 = star()
-
-new_monster = Monster_2("Ghalta", 12)
-
-print(f"monsters name is: {new_monster.name} and his health is: {new_monster.health}")
+if __name__ == "__main__":
+    countdown_duration = 60  # Set the countdown duration in seconds
+    window = CountdownTimer(800, 600, "Countdown Timer Example", countdown_duration)
+    arcade.run()
+#crank
