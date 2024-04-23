@@ -1,56 +1,65 @@
 import arcade
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-OBJECT_RADIUS = 10
-OBJECT_WIDTH = 100
-OBJECT_HEIGHT = 20
-OBJECT_SPEED = 5
+WIDTH = HEIGHT = 30
+MARGIN = 10
+ROW_COUNT = COLUMN_COUNT = 20
+
+SCREEN_WIDTH = (WIDTH + MARGIN) * COLUMN_COUNT + MARGIN
+SCREEN_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
+
 
 class MyGame(arcade.Window):
 
-    def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Lab 7 - User Control")
-        self.mouse_object_x = SCREEN_WIDTH // 2
-        self.mouse_object_y = SCREEN_HEIGHT // 2
-        self.keyboard_object_x = SCREEN_WIDTH // 2
-        self.keyboard_object_y = OBJECT_RADIUS
-        self.is_left_pressed = False
-        self.is_right_pressed = False
+    """
+    Main application class.
+    """
+
+    def __init__(self, width, height):
+        super().__init__(width, height)
+
+        arcade.set_background_color(arcade.color.BLACK)
+
+        self.grid = []
+        for row in range(ROW_COUNT):
+            self.grid.append([])
+            for column in range(COLUMN_COUNT):
+                self.grid[row].append(0)
+
+        self.grid[1][5] = 5
 
     def on_draw(self):
+        """
+        Render the screen.
+        """
         arcade.start_render()
-        # Draw the mouse-controlled object
-        arcade.draw_circle_filled(self.mouse_object_x, self.mouse_object_y, OBJECT_RADIUS, arcade.color.LIGHT_BLUE)
-        # Draw the keyboard-controlled object
-        arcade.draw_rectangle_filled(self.keyboard_object_x, self.keyboard_object_y, OBJECT_WIDTH, OBJECT_HEIGHT, arcade.color.ORANGE)
 
-    def update(self, delta_time):
-        if self.is_left_pressed and self.keyboard_object_x > OBJECT_WIDTH // 2:
-            self.keyboard_object_x -= OBJECT_SPEED
-        elif self.is_right_pressed and self.keyboard_object_x < SCREEN_WIDTH - OBJECT_WIDTH // 2:
-            self.keyboard_object_x += OBJECT_SPEED
+        arcade.draw_rectangle_filled(WIDTH / 2 + MARGIN, HEIGHT / 2 + MARGIN, WIDTH, HEIGHT, arcade.color.WHITE)
 
-    def on_mouse_motion(self, x, y, delta_x, delta_y):
-        if OBJECT_RADIUS <= x <= SCREEN_WIDTH - OBJECT_RADIUS:
-            self.mouse_object_x = x
-        if OBJECT_RADIUS <= y <= SCREEN_HEIGHT - OBJECT_RADIUS:
-            self.mouse_object_y = y
+        for row in range(ROW_COUNT):
+            for column in range(COLUMN_COUNT):
+                x = column * (WIDTH + MARGIN) + WIDTH / 2 + MARGIN
+                y = row * (HEIGHT + MARGIN) + HEIGHT / 2 + MARGIN
+                color = arcade.color.WHITE
+                if self.grid[row][column] == 1:
+                    color = arcade.color.GREEN
+                arcade.draw_rectangle_filled(x, y, WIDTH, HEIGHT, color)
 
-    def on_key_press(self, key, modifiers):
-        if key == arcade.key.LEFT:
-            self.is_left_pressed = True
-        elif key == arcade.key.RIGHT:
-            self.is_right_pressed = True
+    def on_mouse_press(self, x, y, button, key_modifiers):
+        print("click")
+        print(f"Mouse coordinates: ({x}, {y})")
+        grid_x = int(x // (WIDTH + MARGIN))
+        grid_y = int(y // (HEIGHT + MARGIN))
+        print(f"Grid coordinates: ({grid_x}, {grid_y})")
+        if 0 <= grid_x < COLUMN_COUNT and 0 <= grid_y < ROW_COUNT:
+            column = x // (WIDTH + MARGIN)
+            row = y // (HEIGHT + MARGIN)
+            self.grid[row][column] = (self.grid[row][column] + 1) % 2
 
-    def on_key_release(self, key, modifiers):
-        if key == arcade.key.LEFT:
-            self.is_left_pressed = False
-        elif key == arcade.key.RIGHT:
-            self.is_right_pressed = False
 
 def main():
-    window = MyGame()
+    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT)
     arcade.run()
 
-main()
+
+if __name__ == "__main__":
+    main()
