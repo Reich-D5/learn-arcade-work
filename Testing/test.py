@@ -1,26 +1,56 @@
 import arcade
-import time
 
-class CountdownTimer(arcade.Window):
-    def __init__(self, width, height, title, countdown_duration):
-        super().__init__(width, height, title)
-        self.countdown_duration = countdown_duration
-        self.timer_text = f"Time left: {self.countdown_duration:.1f}"
-        self.start_time = time.time()
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+OBJECT_RADIUS = 10
+OBJECT_WIDTH = 100
+OBJECT_HEIGHT = 20
+OBJECT_SPEED = 5
+
+class MyGame(arcade.Window):
+
+    def __init__(self):
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Lab 7 - User Control")
+        self.mouse_object_x = SCREEN_WIDTH // 2
+        self.mouse_object_y = SCREEN_HEIGHT // 2
+        self.keyboard_object_x = SCREEN_WIDTH // 2
+        self.keyboard_object_y = OBJECT_RADIUS
+        self.is_left_pressed = False
+        self.is_right_pressed = False
 
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_text(self.timer_text, 10, self.height - 30, arcade.color.WHITE, 20)
+        # Draw the mouse-controlled object
+        arcade.draw_circle_filled(self.mouse_object_x, self.mouse_object_y, OBJECT_RADIUS, arcade.color.LIGHT_BLUE)
+        # Draw the keyboard-controlled object
+        arcade.draw_rectangle_filled(self.keyboard_object_x, self.keyboard_object_y, OBJECT_WIDTH, OBJECT_HEIGHT, arcade.color.ORANGE)
 
     def update(self, delta_time):
-        elapsed_time = time.time() - self.start_time
-        time_left = max(0, self.countdown_duration - elapsed_time)
-        self.timer_text = f"Time left: {time_left:.1f}"
-        if time_left <= 0:
-            self.timer_text = "Time's up!"
+        if self.is_left_pressed and self.keyboard_object_x > OBJECT_WIDTH // 2:
+            self.keyboard_object_x -= OBJECT_SPEED
+        elif self.is_right_pressed and self.keyboard_object_x < SCREEN_WIDTH - OBJECT_WIDTH // 2:
+            self.keyboard_object_x += OBJECT_SPEED
 
-if __name__ == "__main__":
-    countdown_duration = 60  # Set the countdown duration in seconds
-    window = CountdownTimer(800, 600, "Countdown Timer Example", countdown_duration)
+    def on_mouse_motion(self, x, y, delta_x, delta_y):
+        if OBJECT_RADIUS <= x <= SCREEN_WIDTH - OBJECT_RADIUS:
+            self.mouse_object_x = x
+        if OBJECT_RADIUS <= y <= SCREEN_HEIGHT - OBJECT_RADIUS:
+            self.mouse_object_y = y
+
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.LEFT:
+            self.is_left_pressed = True
+        elif key == arcade.key.RIGHT:
+            self.is_right_pressed = True
+
+    def on_key_release(self, key, modifiers):
+        if key == arcade.key.LEFT:
+            self.is_left_pressed = False
+        elif key == arcade.key.RIGHT:
+            self.is_right_pressed = False
+
+def main():
+    window = MyGame()
     arcade.run()
-#crank
+
+main()

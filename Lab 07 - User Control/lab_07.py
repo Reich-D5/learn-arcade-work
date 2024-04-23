@@ -1,91 +1,60 @@
 import arcade
-import os
+from lab_03 import draw_sunrise
 
-# --- Constants ---
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-MOVEMENT_SPEED = 5
+OBJECT_RADIUS = 10
+OBJECT_WIDTH = 100
+OBJECT_HEIGHT = 20
+OBJECT_SPEED = 5
 
-# Get the current directory of the script
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sound_dir = os.path.join(current_dir, 'sounds')
-
-class CustomShape:
-    """ Class representing a custom shape """
-
-    def __init__(self, x, y, color):
-        self.x = x
-        self.y = y
-        self.color = color
-
-    def draw(self):
-        arcade.draw_rectangle_filled(self.x, self.y, 50, 50, self.color)
-
-    def update_position(self, delta_x, delta_y):
-        self.x += delta_x
-        self.y += delta_y
 
 class MyGame(arcade.Window):
-    """ Our Custom Window Class"""
 
     def __init__(self):
-        """ Initializer """
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Lab 7 - User Control")
-
-        self.shape1 = CustomShape(100, 100, arcade.color.BLUE)
-        self.shape2 = CustomShape(200, 200, arcade.color.RED)
-
-        # Load sound files using the full path
-        self.click_sound = arcade.load_sound(os.path.join(sound_dir, "click_sound.wav"))
-        self.bump_sound = arcade.load_sound(os.path.join(sound_dir, "bump_sound.wav"))
+        self.mouse_object_x = SCREEN_WIDTH // 2
+        self.mouse_object_y = SCREEN_HEIGHT // 2
+        self.keyboard_object_x = SCREEN_WIDTH // 2
+        self.keyboard_object_y = OBJECT_RADIUS
+        self.is_left_pressed = False
+        self.is_right_pressed = False
 
     def on_draw(self):
-        """ Draw everything """
         arcade.start_render()
-        self.shape1.draw()
-        self.shape2.draw()
+
+        draw_sunrise(1/60)
+
+        arcade.draw_circle_filled(self.mouse_object_x, self.mouse_object_y, OBJECT_RADIUS, arcade.color.LIGHT_BLUE)
+        arcade.draw_rectangle_filled(self.keyboard_object_x, self.keyboard_object_y, OBJECT_WIDTH, OBJECT_HEIGHT, arcade.color.ORANGE)
 
     def update(self, delta_time):
-        """ Move objects and check for collision with edges """
-        self.shape1.update_position(self.shape1.dx, self.shape1.dy)
-        self.shape2.update_position(self.shape2.dx, self.shape2.dy)
+        if self.is_left_pressed and self.keyboard_object_x > OBJECT_WIDTH // 2:
+            self.keyboard_object_x -= OBJECT_SPEED
+        elif self.is_right_pressed and self.keyboard_object_x < SCREEN_WIDTH - OBJECT_WIDTH // 2:
+            self.keyboard_object_x += OBJECT_SPEED
 
-        self.check_edge_collision(self.shape1)
-        self.check_edge_collision(self.shape2)
-
-    def check_edge_collision(self, shape):
-        """ Check if a shape is colliding with the edges of the screen """
-        if shape.x < 25 or shape.x > SCREEN_WIDTH - 25 or shape.y < 25 or shape.y > SCREEN_HEIGHT - 25:
-            arcade.play_sound(self.bump_sound)
+    def on_mouse_motion(self, x, y, delta_x, delta_y):
+        if OBJECT_RADIUS <= x <= SCREEN_WIDTH - OBJECT_RADIUS:
+            self.mouse_object_x = x
+        if OBJECT_RADIUS <= y <= SCREEN_HEIGHT - OBJECT_RADIUS:
+            self.mouse_object_y = y
 
     def on_key_press(self, key, modifiers):
-        """ Handle key press events """
-        if key == arcade.key.W:
-            self.shape1.dy = MOVEMENT_SPEED
-        elif key == arcade.key.S:
-            self.shape1.dy = -MOVEMENT_SPEED
-        elif key == arcade.key.A:
-            self.shape1.dx = -MOVEMENT_SPEED
-        elif key == arcade.key.D:
-            self.shape1.dx = MOVEMENT_SPEED
+        if key == arcade.key.LEFT:
+            self.is_left_pressed = True
+        elif key == arcade.key.RIGHT:
+            self.is_right_pressed = True
 
     def on_key_release(self, key, modifiers):
-        """ Handle key release events """
-        if key in [arcade.key.W, arcade.key.S]:
-            self.shape1.dy = 0
-        elif key in [arcade.key.A, arcade.key.D]:
-            self.shape1.dx = 0
+        if key == arcade.key.LEFT:
+            self.is_left_pressed = False
+        elif key == arcade.key.RIGHT:
+            self.is_right_pressed = False
 
-    def on_mouse_press(self, x, y, button, modifiers):
-        """ Handle mouse click events """
-        arcade.play_sound(self.click_sound)
-        self.shape2.x = x
-        self.shape2.y = y
 
 def main():
     window = MyGame()
     arcade.run()
 
-if __name__ == "__main__":
-    main()
-#crank
+main()
