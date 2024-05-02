@@ -1,5 +1,5 @@
 class Room:
-    def __init__(self, number='', name='', description='',north=None, east=None, south=None, west=None):
+    def __init__(self, number='', name='', description='', north=None, east=None, south=None, west=None):
         self.number = number
         self.name = name
         self.description = description
@@ -16,6 +16,7 @@ def enter_room(room):
 
 def main():
     rooms = []
+    inventory = []
 
     rooms.append(Room(0, "Living Room"))
     rooms.append(Room(1, "Kitchen"))
@@ -80,7 +81,6 @@ def main():
 
     #guest room
     rooms[4].south_room = rooms[7]
-
 
     current_room = rooms[0]
     enter_room(current_room)

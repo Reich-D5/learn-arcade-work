@@ -45,6 +45,7 @@ class MyGame(arcade.Window):
         # Load coin sound
         self.coin_sound = arcade.load_sound("sounds/coin.wav")
 
+
     def on_draw(self):
         arcade.start_render()
 
