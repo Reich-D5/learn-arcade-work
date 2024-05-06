@@ -1,3 +1,25 @@
+class Item:
+    def __init__(self, name='', description=''):
+        self.name = name
+        self.description = description
+
+
+class Player:
+    def __init__(self):
+        self.inventory = []
+
+    def add_to_inventory(self, items):
+        self.inventory.append(items)
+
+    def display_inventory(self):
+        if self.inventory:
+            print("Inventory")
+            for item in self.inventory:
+                print("-", item.name)
+        else:
+            print("Inventory is empty")
+
+
 class Room:
     def __init__(self, number='', name='', description='', north=None, east=None, south=None, west=None):
         self.number = number
@@ -7,6 +29,11 @@ class Room:
         self.east_room = east
         self.south_room = south
         self.west_room = west
+        self.items = []
+
+    def add_item(self, item):
+        self.items.append(item)
+
 
 
 def enter_room(room):
@@ -16,7 +43,6 @@ def enter_room(room):
 
 def main():
     rooms = []
-    inventory = []
 
     rooms.append(Room(0, "Living Room"))
     rooms.append(Room(1, "Kitchen"))
@@ -48,6 +74,13 @@ def main():
     rooms[8].description = ("The dining room has a long  table with a black candeleria in the middle and only one large, throne like seat at the head of the table"
                             "with the romanian flag...\n"
                             "there is a door to the north and to the east")
+
+    item1 = Item("lighter", "an old zippo lighter")
+    item2 = Item("hammer", "Who would need a hammer in a place like this?")
+    item3 = Item("candle", "hmmm... Did I pick up that lighter")
+    item4 = Item("key", "a gold key encrusted with rubies and emeralds")
+    item5 = Item("mysterious chalice", "a strange chalice with odd engravings on the side")
+    item6 = Item("sword", "A knight's favorite weapon")
 
     #living room connection
     rooms[0].north_room = rooms[1]
