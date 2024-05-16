@@ -1,3 +1,6 @@
+import random
+
+
 class Item:
     def __init__(self, name='', description=''):
         self.name = name
@@ -18,6 +21,39 @@ class Player:
                 print("-", item.name)
         else:
             print("Inventory is empty")
+
+
+class Enemy:
+    def __init__(self, name):
+        self.name = name
+        self.current_room = None
+
+    def move_randomly(self):
+        possible_directions = []
+        if self.current_room.north_room:
+            possible_directions.append('north')
+        if self.current_room.east_room:
+            possible_directions.append('east')
+        if self.current_room.south_room:
+            possible_directions.append('south')
+        if self.current_room.west_room:
+            possible_directions.append('west')
+
+        if possible_directions:
+            direction = random.choice(possible_directions)
+            if direction == 'north':
+                self.current_room = self.current_room.north_room
+            elif direction == 'east':
+                self.current_room = self.current_room.east_room
+            elif direction == 'south':
+                self.current_room = self.current_room.south_room
+            elif direction == 'west':
+                self.current_room = self.current_room.west_room
+            print(f"The {self.name} moves to {self.current_room.name}")
+
+    def detect_player(self, player):
+        if self.current_room == player.current_room:
+            print(f"The {self.name} spots you!")
 
 
 class Room:
@@ -43,6 +79,9 @@ def enter_room(room):
 
 def main():
     rooms = []
+    player = Player()
+    enemy = Enemy("unknown creature")
+    enemy.current_room = rooms[random.randint(0, len(rooms)-1)]
 
     rooms.append(Room(0, "Living Room"))
     rooms.append(Room(1, "Kitchen"))
@@ -81,6 +120,13 @@ def main():
     item4 = Item("key", "a gold key encrusted with rubies and emeralds")
     item5 = Item("mysterious chalice", "a strange chalice with odd engravings on the side")
     item6 = Item("sword", "A knight's favorite weapon")
+
+    rooms[1].add_item(item1)
+    rooms[2].add_item(item3)
+    rooms[4].add_item(item6)
+    rooms[7].add_item(item5)
+    rooms[5].add_item(item4)
+    rooms[8].add_item(item2)
 
     #living room connection
     rooms[0].north_room = rooms[1]
@@ -126,7 +172,26 @@ def main():
     moves_left = max_moves
 
     while moves_left >= 0:
+
+        enemy.move_randomly()
+        enemy.detect_player(player)
+
         user_input = input("\nWhat would you like to do? ").strip().lower()
+
+        if current_room.items:
+            print("you see something else in the room:")
+            for item in current_room.items:
+                print("-", item.name)
+            pick_up = input("do you want to pick up this item?: ").strip().lower()
+            if pick_up == 'y':
+                for item in current_room.items:
+                    player.add_to_inventory(item)
+                print("item picked up!")
+                current_room.items = []
+            elif pick_up == 'n':
+                print("maybe later for this one...")
+            else:
+                print("invalid input! please enter y/n...")
 
         if user_input == 'n' or user_input == 'north':
             if current_room.north_room:

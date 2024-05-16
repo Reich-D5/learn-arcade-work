@@ -52,6 +52,12 @@ class MyGame(arcade.Window):
         elif key == arcade.key.RIGHT:
             self.is_right_pressed = False
 
+    def on_mouse_press(self, x, y, button, modifiers):
+        laser_sound = arcade.load_sound(resources:sounds/laser.wav)
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            arcade.play_sound(laser_sound)
+
+
 
 def main():
     window = MyGame()
