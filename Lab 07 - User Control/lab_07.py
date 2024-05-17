@@ -19,6 +19,7 @@ class MyGame(arcade.Window):
         self.keyboard_object_y = OBJECT_RADIUS
         self.is_left_pressed = False
         self.is_right_pressed = False
+        self.edge_bump_sound = arcade.load_sound(":resources:sounds/hit1.wav")
 
     def on_draw(self):
         arcade.start_render()
@@ -33,6 +34,9 @@ class MyGame(arcade.Window):
             self.keyboard_object_x -= OBJECT_SPEED
         elif self.is_right_pressed and self.keyboard_object_x < SCREEN_WIDTH - OBJECT_WIDTH // 2:
             self.keyboard_object_x += OBJECT_SPEED
+
+        if self.keyboard_object_x <= OBJECT_WIDTH // 2 or self.keyboard_object_x >= SCREEN_WIDTH - OBJECT_WIDTH // 2:
+            arcade.play_sound(self.edge_bump_sound)
 
     def on_mouse_motion(self, x, y, delta_x, delta_y):
         if OBJECT_RADIUS <= x <= SCREEN_WIDTH - OBJECT_RADIUS:
@@ -53,14 +57,14 @@ class MyGame(arcade.Window):
             self.is_right_pressed = False
 
     def on_mouse_press(self, x, y, button, modifiers):
-        laser_sound = arcade.load_sound(resources:sounds/laser.wav)
+        laser_sound = arcade.load_sound(":resources:sounds/laser4.wav")
         if button == arcade.MOUSE_BUTTON_LEFT:
             arcade.play_sound(laser_sound)
-
 
 
 def main():
     window = MyGame()
     arcade.run()
+
 
 main()
